@@ -1,3 +1,5 @@
+.env
+
 # Logs
 logs
 *.log
@@ -143,4 +145,3 @@ vite.config.ts.timestamp-*
 .vite/
 
 node_modules/
-.env
