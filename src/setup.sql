@@ -271,7 +271,12 @@ VALUES
 -- VERIFICATION QUERIES
 -- =========================================================
 
-SELECT *
+SELECT
+    organization_id,
+    name,
+    description,
+    contact_email,
+    logo_filename
 FROM public.organization
 ORDER BY organization_id;
 
@@ -289,7 +294,9 @@ JOIN public.organization AS o
 ORDER BY p.project_date;
 
 
-SELECT *
+SELECT
+    category_id,
+    name
 FROM public.category
 ORDER BY name;
 
