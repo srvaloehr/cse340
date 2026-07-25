@@ -192,7 +192,7 @@ VALUES
 
 CREATE TABLE public.category (
     category_id SERIAL,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(100) NOT NULL,
 
     CONSTRAINT category_pk
         PRIMARY KEY (category_id),
