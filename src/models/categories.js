@@ -50,5 +50,19 @@ const updateCategory = async (categoryId, name) => {
     if (result.rows.length === 0) throw new Error('Category not found');
     return result.rows[0].category_id;
 };
+const assignCategoryToProject = async (categoryId, projectId) => {
+    const query = `
+        INSERT INTO project_category (category_id, project_id)
+        VALUES ($1, $2);
+    `;
+    await db.query(query, [categoryId, projectId]);
+};
 
-export { getCategoryById, getCategoriesByProjectId, createCategory, updateCategory };
+const updateCategoryAssignments = async (projectId, categoryIds) => {
+
+    await db.query('DELETE FROM project_category WHERE project_id = $1;', [projectId]);
+    for (const categoryId of categoryIds) {
+        await assignCategoryToProject(categoryId, projectId);
+    }
+};
+export { getCategoryById, getCategoriesByProjectId, createCategory, updateCategory,  updateCategoryAssignments };

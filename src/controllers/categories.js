@@ -3,9 +3,11 @@ import {
     getAllCategories,
     getCategoryById,
     createCategory,
-    updateCategory
+    updateCategory,
+    getCategoriesByProjectId,
+    updateCategoryAssignments
 } from '../models/categories.js';
-import { getProjectsByCategoryId } from '../models/projects.js';
+import { getProjectsByCategoryId, getProjectDetails } from '../models/projects.js';
 
 // Server-side rules: name required, min 3, max 100
 // (Client-side will only enforce required + max 100, so we can test the min on the server.)
@@ -68,6 +70,28 @@ const processEditCategoryForm = async (req, res) => {
     req.flash('success', 'Category updated successfully!');
     res.redirect(`/category/${categoryId}`);
 };
+const showAssignCategoriesForm = async (req, res) => {
+    const projectId = req.params.projectId;
+
+    const projectDetails = await getProjectDetails(projectId);
+    const categories = await getAllCategories();
+    const assignedCategories = await getCategoriesByProjectId(projectId);
+
+    const title = 'Assign Categories to Project';
+    res.render('assign-categories', { title, projectId, projectDetails, categories, assignedCategories });
+};
+
+const processAssignCategoriesForm = async (req, res) => {
+    const projectId = req.params.projectId;
+    const selectedCategoryIds = req.body.categoryIds || [];
+
+    const categoryIdsArray = Array.isArray(selectedCategoryIds) ? selectedCategoryIds : [selectedCategoryIds];
+
+    await updateCategoryAssignments(projectId, categoryIdsArray);
+    req.flash('success', 'Categories updated successfully.');
+    res.redirect(`/project/${projectId}`);
+};
+
 
 export {
     showCategoriesPage,
@@ -76,5 +100,7 @@ export {
     processNewCategoryForm,
     showEditCategoryForm,
     processEditCategoryForm,
-    categoryValidation
+    categoryValidation,
+    showAssignCategoriesForm,
+    processAssignCategoriesForm
 };
